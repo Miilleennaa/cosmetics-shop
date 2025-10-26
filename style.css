@@ -1,0 +1,126 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.logo {
+    font-weight: bold;
+    font-size: 1.8rem;
+    color: #cb91d2;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: #cb91d2 !important;
+}
+
+.hero-section {
+    background: linear-gradient(135deg, #f8bbf0 0%, #f48fe0 100%);
+    color: white;
+    padding: 100px 0;
+    text-align: center;
+}
+
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+    margin-bottom: 25px; 
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.product-img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.3s ease;
+}
+
+.btn-pink {
+    background-color: #cb91d2;
+    border-color: #cb91d2;
+    color: white;
+}
+
+.btn-pink:hover {
+    background-color: #896487;
+    border-color: #896487;
+}
+
+.btn-outline-pink {
+    border-color: #cb91d2;
+    color: #cb91d2;
+}
+
+.btn-outline-pink:hover {
+    background-color: #cb91d2;
+    color: white;
+}
+
+.footer {
+    background-color: #343a40;
+    color: white;
+    padding: 30px 0;
+    margin-top: 50px;
+}
+
+.auth-form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    background-color: white;
+}
+
+.client-card {
+    background: linear-gradient(135deg, #f583ff 0%, #582255 100%);
+    color: white;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.order-summary {
+    background-color: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.text-pink {
+    color: #cf96b0 !important;
+}
+
+.product-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-image-container {
+    height: 200px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.product-img:hover {
+    transform: scale(1.05);
+}
+
+.product-card-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-description {
+    flex-grow: 1;
+    margin-bottom: 1rem;
+}

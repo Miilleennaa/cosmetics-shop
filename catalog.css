@@ -1,0 +1,25 @@
+.btn-pink {
+            background-color: #ff69b4;
+            color: white;
+            border: none;
+        }
+        .btn-pink:hover {
+            background-color: #ff1493;
+            color: white;
+        }
+        .card {
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .page-item.active .page-link {
+            background-color: #ff69b4;
+            border-color: #ff69b4;
+        }
+        .page-link {
+            color: #ff69b4;
+        }
+        .page-link:hover {
+            color: #ff1493;
+        }

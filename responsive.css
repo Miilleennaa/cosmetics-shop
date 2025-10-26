@@ -1,0 +1,19 @@
+/* Адаптивные стили */
+@media (max-width: 768px) {
+    .hero-section {
+        padding: 60px 0;
+    }
+    
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+    
+    .card {
+        margin-bottom: 20px;
+    }
+    
+    .auth-form {
+        margin: 20px;
+        padding: 20px;
+    }
+}

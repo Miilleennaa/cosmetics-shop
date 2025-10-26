@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог - Косметика Премиум</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="catalog.css">
+</head>
+<body>
+    <!-- Навигационная панель -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="../index.html">
+                <i class="fas fa-spa me-2"></i>Косметика Премиум
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Главная</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="catalog.html">Каталог</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">Войти</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="account.html">Личный кабинет</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="order.html">Заказы</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <h2 class="mb-4">Каталог косметики</h2>
+        
+        <!-- Поиск и фильтры -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="searchInput" placeholder="Поиск товаров...">
+                    <button class="btn btn-pink" type="button" id="searchButton">Найти</button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <select class="form-select" id="categoryFilter">
+                    <option value="all" selected>Все категории</option>
+                    <option value="Уход за лицом">Уход за лицом</option>
+                    <option value="Уход за телом">Уход за телом</option>
+                    <option value="Декоративная косметика">Декоративная косметика</option>
+                    <option value="Парфюмерия">Парфюмерия</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- Товары -->
+        <div class="row" id="productsContainer">
+            <!-- Товары будут загружаться динамически -->
+        </div>
+        
+        <!-- Пагинация -->
+        <nav aria-label="Навигация по страницам">
+            <ul class="pagination justify-content-center" id="pagination">
+                <!-- Пагинация -->
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Футер -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5><i class="fas fa-spa me-2"></i>Косметика Премиум</h5>
+                    <p>Лучшая косметика для вашей красоты и ухода за собой.</p>
+                </div>
+                <div class="col-md-3">
+                    <h5>Контакты</h5>
+                    <p><i class="fas fa-phone me-2"></i>+7 915 799 08 95</p>
+                    <p><i class="fas fa-envelope me-2"></i>milenan074@gmail.com</p>
+                </div>
+                <div class="col-md-3">
+                    <h5>Мы в соцсетях</h5>
+                    <div class="d-flex">
+                        <a href="#" class="text-white me-3"><i class="fab fa-vk fa-2x"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-instagram fa-2x"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-telegram fa-2x"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt-4 mb-3">
+            <div class="text-center">
+                <p>&copy; 2025 Косметика Премиум. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>

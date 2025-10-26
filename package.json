@@ -1,0 +1,16 @@
+{
+  "name": "cosmetic-shop",
+  "version": "1.0.0",
+  "description": "Интернет-магазин косметики",
+  "main": "index.html",
+  "scripts": {
+    "start": "live-server",
+    "build": "echo 'Build completed'"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.8"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}
