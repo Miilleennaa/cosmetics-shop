@@ -1,0 +1,225 @@
+/* Пульсация для призыва к действию (Кнопки, иконки корзины) */
+@keyframes pulse-gentle {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.pulse-gentle {
+    animation: pulse-gentle 2s ease-in-out infinite;
+}
+
+/* Мерцание */
+@keyframes sparkle {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+.sparkle {
+    animation: sparkle 3s ease-in-out infinite;
+}
+
+/* Плавное появление элементов (для карточек товаров, списков) */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+/* Анимация "всплытия" для карточек товаров */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+.float {
+    animation: float 4s ease-in-out infinite;
+}
+
+/* Вращение */
+@keyframes rotate-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.rotate-slow {
+    animation: rotate-slow 8s linear infinite;
+}
+
+/* Градиентная анимация для акционных элементов */
+@keyframes gradient-shift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.gradient-shift {
+    background: linear-gradient(-45deg, #ff69b4, #cb91d2, #ffb6c1, #dda0dd);
+    background-size: 400% 400%;
+    animation: gradient-shift 8s ease infinite;
+}
+
+/* Анимация появления */
+@keyframes bloom {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.bloom {
+    animation: bloom 0.6s ease-out forwards;
+}
+
+/* Анимация для кнопок с призывом к действию */
+.btn-pink {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-pink:hover {
+    animation: pulse-gentle 1s infinite;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(203, 145, 210, 0.4);
+}
+
+/* Эффект для карточек товаров при загрузке */
+.card {
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+    animation-fill-mode: both;
+}
+
+/* Задержка для последовательного появления карточек */
+.card:nth-child(1) { animation-delay: 0.1s; }
+.card:nth-child(2) { animation-delay: 0.2s; }
+.card:nth-child(3) { animation-delay: 0.3s; }
+.card:nth-child(4) { animation-delay: 0.4s; }
+.card:nth-child(5) { animation-delay: 0.5s; }
+.card:nth-child(6) { animation-delay: 0.6s; }
+
+/* Анимация при наведении на карточку товара */
+.card:hover {
+    transform: translateY(-10px) scale(1.02);
+    transition: all 0.3s ease;
+}
+
+/* Анимация для иконок в преимуществах */
+.card .fa-gem,
+.card .fa-shipping-fast,
+.card .fa-headset {
+    animation: sparkle 3s infinite;
+}
+
+/* Анимация для герой-секции */
+.hero-section h1 {
+    animation: fadeInUp 1s ease-out 0.2s both;
+}
+
+.hero-section p {
+    animation: fadeInUp 1s ease-out 0.4s both;
+}
+
+.hero-section .btn {
+    animation: fadeInUp 1s ease-out 0.6s both;
+}
+
+/* Анимация для уведомлений */
+.alert {
+    animation: bloom 0.5s ease-out;
+}
+
+/* Анимация для карты клиента в личном кабинете */
+.client-card {
+    animation: gradient-shift 10s ease infinite, fadeInUp 0.8s ease-out;
+}
+
+/* Анимация для иконки пользователя */
+.user-avatar {
+    animation: bloom 1s ease-out;
+}
+
+.user-avatar i {
+    font-size: 4rem;
+    color: #cb91d2;
+    animation: pulse-gentle 3s infinite;
+}
+
+/* Анимация для загрузки товаров */
+.product-img {
+    transition: transform 0.5s ease;
+}
+
+.product-img:hover {
+    transform: scale(1.1);
+}
+
+/* Анимация для иконки корзины/избранного */
+.fa-shopping-cart, 
+.fa-heart {
+    transition: all 0.3s ease;
+}
+
+.fa-shopping-cart:hover,
+.fa-heart:hover {
+    animation: pulse-gentle 0.5s infinite;
+    color: #ff69b4;
+}
+
+/* Анимация для навигационного меню */
+.navbar-nav .nav-item {
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+}
+
+.navbar-nav .nav-item:nth-child(1) { animation-delay: 0.1s; }
+.navbar-nav .nav-item:nth-child(2) { animation-delay: 0.2s; }
+.navbar-nav .nav-item:nth-child(3) { animation-delay: 0.3s; }
+.navbar-nav .nav-item:nth-child(4) { animation-delay: 0.4s; }
+.navbar-nav .nav-item:nth-child(5) { animation-delay: 0.5s; }
+
+/* Анимация для футера */
+.footer {
+    animation: fadeInUp 0.8s ease-out 0.3s both;
+}
+
+/* Анимация для прогресс-баров (если будут в статистике) */
+.progress-bar {
+    animation: bloom 1s ease-out;
+    transition: width 1.5s ease-in-out;
+}
+
+/* Адаптивность анимаций */
+@media (max-width: 768px) {
+    .card:hover {
+        transform: translateY(-5px) scale(1.01);
+    }
+    
+    .hero-section h1 {
+        animation-duration: 0.8s;
+    }
+}
+
+/* Отключение анимаций для пользователей, которые их предпочитают не использовать */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

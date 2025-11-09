@@ -1,4 +1,3 @@
-// Основные функции для всех страниц
 document.addEventListener('DOMContentLoaded', function() {
     // Инициализация данных пользователя
     initializeUserData();
@@ -12,7 +11,35 @@ document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('orderHistory')) {
         loadOrderHistory();
     }
+    
+    // Инициализация анимаций при скролле
+    initScrollAnimations();
 });
+
+// Функция для анимации элементов при скролле
+function initScrollAnimations() {
+    const animatedElements = document.querySelectorAll('.card, .hero-section h1, .hero-section p, .hero-section .btn, .auth-form, .client-card, .order-summary');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = "1";
+                entry.target.style.transform = "translateY(0)";
+                observer.unobserve(entry.target); 
+            }
+        });
+    }, { 
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    });
+    
+    animatedElements.forEach(el => {
+        el.style.opacity = "0";
+        el.style.transform = "translateY(30px)";
+        el.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+        observer.observe(el);
+    });
+}
 
 function initializeUserData() {
     const user = JSON.parse(localStorage.getItem('currentUser'));
@@ -201,6 +228,17 @@ function displayProducts() {
         `;
         container.innerHTML += productHTML;
     });
+    
+    // Инициализацияя анимации для новых карточек товаров
+    setTimeout(() => {
+        const newCards = container.querySelectorAll('.card');
+        newCards.forEach(card => {
+            card.style.opacity = "0";
+            card.style.transform = "translateY(30px)";
+            card.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+        });
+        initScrollAnimations();
+    }, 100);
 }
 
 // Функция для обновления пагинации
@@ -210,7 +248,7 @@ function updatePagination() {
     
     const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
     
-    // Если всего одна страница или нет товаров - скрываем пагинацию
+    // Если всего одна страница или нет товаров - скрытие пагинацию
     if (totalPages <= 1) {
         pagination.innerHTML = '';
         return;
@@ -225,7 +263,7 @@ function updatePagination() {
     pagination.appendChild(prevItem);
     
     // Страницы
-    const maxVisiblePages = 2; // Показываем только 2 страницы
+    const maxVisiblePages = 2; // Показывает только 2 страницы
     for (let i = 1; i <= totalPages && i <= maxVisiblePages; i++) {
         const pageItem = document.createElement('li');
         pageItem.className = `page-item ${currentPage === i ? 'active' : ''}`;
@@ -239,7 +277,7 @@ function updatePagination() {
     nextItem.innerHTML = `<a class="page-link" href="#" data-page="${currentPage + 1}">Следующая</a>`;
     pagination.appendChild(nextItem);
     
-    // Добавляем обработчики событий для пагинации
+    // Обработчики событий для пагинации
     pagination.querySelectorAll('.page-link').forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
@@ -270,7 +308,7 @@ function applyFilters() {
         return matchesSearch && matchesCategory;
     });
     
-    // Корректируем текущую страницу, если она выходит за пределы
+    // Коррекция текущей страницы, если она выходит за пределы
     const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
     if (currentPage > totalPages && totalPages > 0) {
         currentPage = totalPages;
@@ -292,7 +330,7 @@ function showProductNotification(productId) {
 
 // Функция показа уведомления
 function showNotification(message) {
-    // Создаем элемент уведомления
+    // Элемент уведомления
     const notification = document.createElement('div');
     notification.className = 'alert alert-success position-fixed';
     notification.style.cssText = `
