@@ -102,6 +102,8 @@ body {
     height: 100%;
     display: flex;
     flex-direction: column;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    overflow: hidden;
 }
 
 .product-image-container {
@@ -123,4 +125,68 @@ body {
 .product-description {
     flex-grow: 1;
     margin-bottom: 1rem;
+}
+
+.product-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(203, 145, 210, 0.3);
+}
+
+.product-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+}
+
+.badge-new {
+    background: linear-gradient(45deg, #efbcda, #5b364c);
+}
+
+.badge-sale {
+    background: linear-gradient(45deg, #efbcda, #5b364c);
+}
+
+.btn-pink {
+    background: linear-gradient(45deg, #cb91d2, #d46bc9);
+    border: none;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.btn-pink:hover {
+    background: linear-gradient(45deg, #b579bb, #c155b4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(203, 145, 210, 0.4);
+}
+
+.cart-counter {
+    background-color: #ce4474;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+}
+
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #cb91d2;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }

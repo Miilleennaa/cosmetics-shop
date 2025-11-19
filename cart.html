@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина - Косметика Премиум</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="animations.css">
+</head>
+<body>
+    <!-- Навигационная панель -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-spa me-2"></i>Косметика Премиум
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Главная</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="catalog.html">Каталог</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">Войти</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="account.html">Личный кабинет</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="order.html">Заказы</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active position-relative" href="cart.html">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-counter" id="cartCounter" style="display: none;">0</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="mb-4"><i class="fas fa-shopping-cart me-2"></i>Корзина покупок</h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Товары в корзине -->
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Товары в корзине</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="cartItems">
+                        </div>
+                        <div class="text-center py-4" id="emptyCartMessage" style="display: none;">
+                            <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+                            <h4 class="text-muted">Корзина пуста</h4>
+                            <p class="text-muted">Добавьте товары из каталога</p>
+                            <a href="catalog.html" class="btn btn-pink">Перейти в каталог</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <!-- Итоги заказа -->
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0">Итоги заказа</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Товары:</span>
+                            <span id="subtotal">0 руб.</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Доставка:</span>
+                            <span id="delivery">0 руб.</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Скидка:</span>
+                            <span class="text-success" id="discount">0 руб.</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-3">
+                            <strong>Итого:</strong>
+                            <strong id="total">0 руб.</strong>
+                        </div>
+                        
+                        <!-- Промокод -->
+                        <div class="mb-3">
+                            <label for="promoCode" class="form-label">Промокод</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="promoCode" placeholder="Введите промокод">
+                                <button class="btn btn-outline-pink" onclick="applyPromoCode()">Применить</button>
+                            </div>
+                            <div id="promoMessage" class="mt-2"></div>
+                        </div>
+
+                        <button class="btn btn-pink w-100 btn-lg" onclick="proceedToCheckout()">
+                            <i class="fas fa-credit-card me-2"></i>Перейти к оформлению
+                        </button>
+                        
+                        <div class="text-center mt-3">
+                            <a href="catalog.html" class="text-pink">
+                                <i class="fas fa-arrow-left me-1"></i>Продолжить покупки
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Быстрая доставка -->
+                <div class="card mt-4">
+                    <div class="card-body text-center">
+                        <i class="fas fa-shipping-fast fa-2x text-pink mb-3"></i>
+                        <h6>Быстрая доставка</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5><i class="fas fa-spa me-2"></i>Косметика Премиум</h5>
+                    <p>Лучшая косметика для вашей красоты и ухода за собой.</p>
+                </div>
+                <div class="col-md-3">
+                    <h5>Контакты</h5>
+                    <p><i class="fas fa-phone me-2"></i>+7 915 799 08 95</p>
+                    <p><i class="fas fa-envelope me-2"></i>milenan074@gmail.com</p>
+                </div>
+                <div class="col-md-3">
+                    <h5>Мы в соцсетях</h5>
+                    <div class="d-flex">
+                        <a href="#" class="text-white me-3"><i class="fab fa-vk fa-2x"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-instagram fa-2x"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-telegram fa-2x"></i></a>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt-4 mb-3">
+            <div class="text-center">
+                <p>&copy; 2025 Косметика Премиум. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="cart.js"></script>
+</body>
+</html>

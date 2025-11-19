@@ -1,22 +1,61 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Инициализация данных пользователя
     initializeUserData();
     
-    // Загрузка товаров для каталога
     if (document.getElementById('productsContainer')) {
         loadProducts();
     }
     
-    // Загрузка истории заказов
     if (document.getElementById('orderHistory')) {
         loadOrderHistory();
     }
     
-    // Инициализация анимаций при скролле
+    if (document.getElementById('favoriteProducts')) {
+        loadFavoriteProducts();
+    }
+    
+    updateCartCounter();
+    
     initScrollAnimations();
 });
 
-// Функция для анимации элементов при скролле
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+function addToCart(productId, quantity = 1) {
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+
+    const existingItem = cart.find(item => item.id === productId);
+    
+    if (existingItem) {
+        existingItem.quantity += quantity;
+    } else {
+        cart.push({
+            ...product,
+            quantity: quantity
+        });
+    }
+    
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCounter();
+    showNotification(`Товар "${product.name}" добавлен в корзину`, 'success');
+}
+
+function updateCartCounter() {
+    const cartCounter = document.getElementById('cartCounter');
+    if (cartCounter) {
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartCounter.textContent = totalItems;
+        cartCounter.style.display = totalItems > 0 ? 'flex' : 'none';
+    }
+}
+
+function removeFromCart(productId) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart = cart.filter(item => item.id !== productId);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCounter();
+}
+
 function initScrollAnimations() {
     const animatedElements = document.querySelectorAll('.card, .hero-section h1, .hero-section p, .hero-section .btn, .auth-form, .client-card, .order-summary');
     
@@ -53,7 +92,6 @@ function initializeUserData() {
     }
 }
 
-// Данные товаров
 const products = [
     {
         id: 1,
@@ -153,18 +191,15 @@ const products = [
     }
 ];
 
-// Переменные для пагинации и фильтрации
 let currentPage = 1;
 const itemsPerPage = 6;
 let filteredProducts = [...products];
 
-// Функция для загрузки товаров
 function loadProducts() {
     setupEventListeners();
     applyFilters();
 }
 
-// Настройка обработчиков событий
 function setupEventListeners() {
     const searchButton = document.getElementById('searchButton');
     const searchInput = document.getElementById('searchInput');
@@ -194,7 +229,6 @@ function setupEventListeners() {
     }
 }
 
-// Функция для отображения товаров
 function displayProducts() {
     const container = document.getElementById('productsContainer');
     if (!container) return;
@@ -206,21 +240,48 @@ function displayProducts() {
     const productsToShow = filteredProducts.slice(startIndex, endIndex);
     
     if (productsToShow.length === 0) {
-        container.innerHTML = '<div class="col-12 text-center"><p>Товары не найдены</p></div>';
+        container.innerHTML = `
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                <h4 class="text-muted">Товары не найдены</h4>
+                <p class="text-muted">Попробуйте изменить параметры поиска</p>
+            </div>
+        `;
         return;
     }
     
     productsToShow.forEach(product => {
+        const isNew = product.id <= 3; 
+        const isOnSale = product.id % 4 === 0; 
+        
         const productHTML = `
             <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <img src="${product.image}" class="product-img card-img-top" alt="${product.name}">
+                <div class="card h-100 product-card">
+                    <div class="position-relative">
+                        <img src="${product.image}" class="product-img card-img-top" alt="${product.name}">
+                        ${isNew ? '<span class="badge badge-new product-badge">Новинка</span>' : ''}
+                        ${isOnSale ? '<span class="badge badge-sale product-badge">Скидка 15%</span>' : ''}
+                    </div>
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">${product.name}</h5>
-                        <p class="card-text flex-grow-1">${product.description}</p>
+                        <p class="card-text flex-grow-1 text-muted">${product.description}</p>
                         <div class="d-flex justify-content-between align-items-center mt-auto">
-                            <span class="h5 mb-0">${product.price.toLocaleString()} руб.</span>
-                            <button class="btn btn-pink" onclick="showProductNotification(${product.id})">В корзину</button>
+                            <div>
+                                ${isOnSale ? `
+                                    <span class="text-muted text-decoration-line-through me-2">${Math.round(product.price * 1.15).toLocaleString()} руб.</span>
+                                    <span class="h5 mb-0 text-danger price-animation">${product.price.toLocaleString()} руб.</span>
+                                ` : `
+                                    <span class="h5 mb-0 price-animation">${product.price.toLocaleString()} руб.</span>
+                                `}
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn btn-outline-pink heart-beat me-2" onclick="addToFavorites(${product.id})" title="Добавить в избранное">
+                                    <i class="fas fa-heart"></i>
+                                </button>
+                                <button class="btn btn-pink btn-add-to-cart" onclick="showProductNotification(${product.id})">
+                                    <i class="fas fa-cart-plus me-1"></i>В корзину
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -229,7 +290,6 @@ function displayProducts() {
         container.innerHTML += productHTML;
     });
     
-    // Инициализацияя анимации для новых карточек товаров
     setTimeout(() => {
         const newCards = container.querySelectorAll('.card');
         newCards.forEach(card => {
@@ -241,14 +301,12 @@ function displayProducts() {
     }, 100);
 }
 
-// Функция для обновления пагинации
 function updatePagination() {
     const pagination = document.getElementById('pagination');
     if (!pagination) return;
     
     const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
     
-    // Если всего одна страница или нет товаров - скрытие пагинацию
     if (totalPages <= 1) {
         pagination.innerHTML = '';
         return;
@@ -256,14 +314,12 @@ function updatePagination() {
     
     pagination.innerHTML = '';
     
-    // Предыдущая страница
     const prevItem = document.createElement('li');
     prevItem.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
     prevItem.innerHTML = `<a class="page-link" href="#" data-page="${currentPage - 1}">Предыдущая</a>`;
     pagination.appendChild(prevItem);
     
-    // Страницы
-    const maxVisiblePages = 2; // Показывает только 2 страницы
+    const maxVisiblePages = 2; 
     for (let i = 1; i <= totalPages && i <= maxVisiblePages; i++) {
         const pageItem = document.createElement('li');
         pageItem.className = `page-item ${currentPage === i ? 'active' : ''}`;
@@ -271,13 +327,11 @@ function updatePagination() {
         pagination.appendChild(pageItem);
     }
     
-    // Следующая страница
     const nextItem = document.createElement('li');
     nextItem.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
     nextItem.innerHTML = `<a class="page-link" href="#" data-page="${currentPage + 1}">Следующая</a>`;
     pagination.appendChild(nextItem);
     
-    // Обработчики событий для пагинации
     pagination.querySelectorAll('.page-link').forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
@@ -290,7 +344,6 @@ function updatePagination() {
     });
 }
 
-// Функция для применения фильтров
 function applyFilters() {
     const searchInput = document.getElementById('searchInput');
     const categoryFilter = document.getElementById('categoryFilter');
@@ -308,7 +361,6 @@ function applyFilters() {
         return matchesSearch && matchesCategory;
     });
     
-    // Коррекция текущей страницы, если она выходит за пределы
     const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
     if (currentPage > totalPages && totalPages > 0) {
         currentPage = totalPages;
@@ -320,55 +372,200 @@ function applyFilters() {
     updatePagination();
 }
 
-// Функция показа уведомления о товаре
 function showProductNotification(productId) {
-    const product = products.find(p => p.id === productId);
-    if (!product) return;
-    
-    showNotification(`Товар "${product.name}" добавлен в корзину`);
+    addToCart(productId);
 }
 
-// Функция показа уведомления
-function showNotification(message) {
-    // Элемент уведомления
+function showNotification(message, type = 'success') {
     const notification = document.createElement('div');
-    notification.className = 'alert alert-success position-fixed';
+    notification.className = `alert alert-${type} position-fixed notification-slide`;
     notification.style.cssText = `
         top: 20px;
         right: 20px;
         z-index: 1050;
         min-width: 300px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     `;
-    notification.textContent = message;
+    notification.innerHTML = `
+        <div class="d-flex align-items-center">
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'} me-2"></i>
+            <span>${message}</span>
+            <button type="button" class="btn-close ms-auto" onclick="this.parentElement.parentElement.remove()"></button>
+        </div>
+    `;
     
     document.body.appendChild(notification);
     
-    // Удаляем уведомление через 3 секунды
     setTimeout(() => {
-        notification.remove();
-    }, 3000);
+        if (notification.parentElement) {
+            notification.remove();
+        }
+    }, 4000);
+}
+
+function addToFavorites(productId) {
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+
+    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    
+    if (!favorites.find(item => item.id === productId)) {
+        favorites.push(product);
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+        showNotification(`Товар "${product.name}" добавлен в избранное`, 'info');
+    } else {
+        showNotification(`Товар "${product.name}" уже в избранном`, 'warning');
+    }
+}
+
+function loadFavoriteProducts() {
+    const favoritesContainer = document.getElementById('favoriteProducts');
+    const noFavoritesMessage = document.getElementById('noFavoritesMessage');
+    
+    if (!favoritesContainer) return;
+    
+    const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    
+    if (favorites.length === 0) {
+        favoritesContainer.style.display = 'none';
+        if (noFavoritesMessage) {
+            noFavoritesMessage.style.display = 'block';
+        }
+        return;
+    }
+    
+    if (noFavoritesMessage) {
+        noFavoritesMessage.style.display = 'none';
+    }
+    
+    favoritesContainer.innerHTML = '';
+    favorites.forEach(product => {
+        const productHTML = `
+            <div class="col-md-6 mb-3">
+                <div class="card h-100">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img src="${product.image}" class="img-fluid rounded-start" alt="${product.name}" style="height: 120px; object-fit: cover; width: 100%;">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h6 class="card-title">${product.name}</h6>
+                                <p class="card-text text-muted small">${product.price.toLocaleString()} руб.</p>
+                                <button class="btn btn-sm btn-pink" onclick="addToCart(${product.id})">
+                                    <i class="fas fa-cart-plus me-1"></i>В корзину
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger ms-2" onclick="removeFromFavorites(${product.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        favoritesContainer.innerHTML += productHTML;
+    });
+}
+
+function removeFromFavorites(productId) {
+    let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+    favorites = favorites.filter(item => item.id !== productId);
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+    loadFavoriteProducts();
+    showNotification('Товар удален из избранного', 'warning');
 }
 
 function loadOrderHistory() {
     const orderHistory = document.getElementById('orderHistory');
+    const noOrdersMessage = document.getElementById('noOrdersMessage');
+    
     if (!orderHistory) return;
     
-    // Загрузка истории заказов из localStorage
     const orders = JSON.parse(localStorage.getItem('userOrders')) || [];
     
     if (orders.length === 0) {
-        orderHistory.innerHTML = '<p>У вас пока нет заказов</p>';
+        orderHistory.innerHTML = '';
+        if (noOrdersMessage) {
+            noOrdersMessage.style.display = 'block';
+        }
         return;
     }
     
+    if (noOrdersMessage) {
+        noOrdersMessage.style.display = 'none';
+    }
+    
     orderHistory.innerHTML = orders.map(order => `
-        <div class="card mb-3">
-            <div class="card-body">
-                <h5 class="card-title">Заказ #${order.id}</h5>
-                <p class="card-text">Дата: ${order.date}</p>
-                <p class="card-text">Сумма: ${order.total.toLocaleString()} руб.</p>
-                <p class="card-text">Статус: ${order.status}</p>
-            </div>
-        </div>
+        <tr>
+            <td>#${order.id}</td>
+            <td>${order.date}</td>
+            <td>${order.total.toLocaleString()} руб.</td>
+            <td><span class="badge bg-${getStatusBadgeColor(order.status)}">${order.status}</span></td>
+            <td>
+                <button class="btn btn-sm btn-outline-pink" onclick="viewOrderDetails(${order.id})">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </td>
+        </tr>
     `).join('');
+}
+
+function getStatusBadgeColor(status) {
+    switch(status) {
+        case 'Доставлен': return 'success';
+        case 'В обработке': return 'warning';
+        case 'Отменен': return 'danger';
+        default: return 'secondary';
+    }
+}
+
+function viewOrderDetails(orderId) {
+    showNotification(`Детали заказа #${orderId} будут показаны здесь`, 'info');
+}
+
+function loadMoreOrders() {
+    showNotification('История заказов обновлена', 'success');
+    loadOrderHistory();
+}
+
+function editProfile() {
+    showNotification('Редактирование профиля будет доступно в следующем обновлении', 'info');
+}
+
+function logout() {
+    localStorage.removeItem('currentUser');
+    showNotification('Вы успешно вышли из системы', 'success');
+    setTimeout(() => {
+        window.location.href = 'login.html';
+    }, 1500);
+}
+
+function placeOrder() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    if (cart.length === 0) {
+        showNotification('Корзина пуста. Добавьте товары перед оформлением заказа.', 'warning');
+        return;
+    }
+    
+    const newOrder = {
+        id: Date.now(),
+        date: new Date().toLocaleDateString('ru-RU'),
+        total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+        status: 'В обработке',
+        items: [...cart]
+    };
+    
+    let orders = JSON.parse(localStorage.getItem('userOrders')) || [];
+    orders.unshift(newOrder);
+    localStorage.setItem('userOrders', JSON.stringify(orders));
+    
+    localStorage.removeItem('cart');
+    updateCartCounter();
+    
+    showNotification('Заказ успешно оформлен!', 'success');
+    
+    setTimeout(() => {
+        window.location.href = 'account.html';
+    }, 2000);
 }

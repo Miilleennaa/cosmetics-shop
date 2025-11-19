@@ -14,12 +14,12 @@
             transform: translateY(-5px);
         }
         .page-item.active .page-link {
-            background-color: #ff69b4;
-            border-color: #ff69b4;
+            background-color: #c77aa9;
+            border-color: #c77aa9;
         }
         .page-link {
-            color: #ff69b4;
+            color: #c77aa9;
         }
         .page-link:hover {
-            color: #ff1493;
+            color: #945a7e;
         }

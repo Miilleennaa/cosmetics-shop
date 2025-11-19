@@ -1,4 +1,3 @@
-/* Пульсация для призыва к действию (Кнопки, иконки корзины) */
 @keyframes pulse-gentle {
     0% { transform: scale(1); }
     50% { transform: scale(1.05); }
@@ -9,7 +8,6 @@
     animation: pulse-gentle 2s ease-in-out infinite;
 }
 
-/* Мерцание */
 @keyframes sparkle {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.6; }
@@ -19,7 +17,6 @@
     animation: sparkle 3s ease-in-out infinite;
 }
 
-/* Плавное появление элементов (для карточек товаров, списков) */
 @keyframes fadeInUp {
     from {
         opacity: 0;
@@ -35,7 +32,6 @@
     animation: fadeInUp 0.8s ease-out forwards;
 }
 
-/* Анимация "всплытия" для карточек товаров */
 @keyframes float {
     0% { transform: translateY(0px); }
     50% { transform: translateY(-10px); }
@@ -46,7 +42,6 @@
     animation: float 4s ease-in-out infinite;
 }
 
-/* Вращение */
 @keyframes rotate-slow {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
@@ -56,7 +51,6 @@
     animation: rotate-slow 8s linear infinite;
 }
 
-/* Градиентная анимация для акционных элементов */
 @keyframes gradient-shift {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
@@ -69,7 +63,6 @@
     animation: gradient-shift 8s ease infinite;
 }
 
-/* Анимация появления */
 @keyframes bloom {
     from {
         opacity: 0;
@@ -85,7 +78,6 @@
     animation: bloom 0.6s ease-out forwards;
 }
 
-/* Анимация для кнопок с призывом к действию */
 .btn-pink {
     transition: all 0.3s ease;
     position: relative;
@@ -98,14 +90,12 @@
     box-shadow: 0 5px 15px rgba(203, 145, 210, 0.4);
 }
 
-/* Эффект для карточек товаров при загрузке */
 .card {
     animation: fadeInUp 0.6s ease-out forwards;
     opacity: 0;
     animation-fill-mode: both;
 }
 
-/* Задержка для последовательного появления карточек */
 .card:nth-child(1) { animation-delay: 0.1s; }
 .card:nth-child(2) { animation-delay: 0.2s; }
 .card:nth-child(3) { animation-delay: 0.3s; }
@@ -113,20 +103,17 @@
 .card:nth-child(5) { animation-delay: 0.5s; }
 .card:nth-child(6) { animation-delay: 0.6s; }
 
-/* Анимация при наведении на карточку товара */
 .card:hover {
     transform: translateY(-10px) scale(1.02);
     transition: all 0.3s ease;
 }
 
-/* Анимация для иконок в преимуществах */
 .card .fa-gem,
 .card .fa-shipping-fast,
 .card .fa-headset {
     animation: sparkle 3s infinite;
 }
 
-/* Анимация для герой-секции */
 .hero-section h1 {
     animation: fadeInUp 1s ease-out 0.2s both;
 }
@@ -139,17 +126,14 @@
     animation: fadeInUp 1s ease-out 0.6s both;
 }
 
-/* Анимация для уведомлений */
 .alert {
     animation: bloom 0.5s ease-out;
 }
 
-/* Анимация для карты клиента в личном кабинете */
 .client-card {
     animation: gradient-shift 10s ease infinite, fadeInUp 0.8s ease-out;
 }
 
-/* Анимация для иконки пользователя */
 .user-avatar {
     animation: bloom 1s ease-out;
 }
@@ -160,7 +144,6 @@
     animation: pulse-gentle 3s infinite;
 }
 
-/* Анимация для загрузки товаров */
 .product-img {
     transition: transform 0.5s ease;
 }
@@ -169,7 +152,6 @@
     transform: scale(1.1);
 }
 
-/* Анимация для иконки корзины/избранного */
 .fa-shopping-cart, 
 .fa-heart {
     transition: all 0.3s ease;
@@ -181,7 +163,6 @@
     color: #ff69b4;
 }
 
-/* Анимация для навигационного меню */
 .navbar-nav .nav-item {
     animation: fadeInUp 0.6s ease-out forwards;
     opacity: 0;
@@ -193,18 +174,15 @@
 .navbar-nav .nav-item:nth-child(4) { animation-delay: 0.4s; }
 .navbar-nav .nav-item:nth-child(5) { animation-delay: 0.5s; }
 
-/* Анимация для футера */
 .footer {
     animation: fadeInUp 0.8s ease-out 0.3s both;
 }
 
-/* Анимация для прогресс-баров (если будут в статистике) */
 .progress-bar {
     animation: bloom 1s ease-out;
     transition: width 1.5s ease-in-out;
 }
 
-/* Адаптивность анимаций */
 @media (max-width: 768px) {
     .card:hover {
         transform: translateY(-5px) scale(1.01);
@@ -215,11 +193,104 @@
     }
 }
 
-/* Отключение анимаций для пользователей, которые их предпочитают не использовать */
 @media (prefers-reduced-motion: reduce) {
     * {
         animation-duration: 0.01ms !important;
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
+}
+
+.product-card {
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.product-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(203, 145, 210, 0.3);
+}
+
+@keyframes pricePulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.price-animation {
+    animation: pricePulse 0.6s ease-out;
+}
+
+@keyframes buttonPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.btn-add-to-cart {
+    transition: all 0.3s ease;
+}
+
+.btn-add-to-cart:hover {
+    animation: buttonPop 0.4s ease;
+}
+
+.heart-beat {
+    transition: all 0.3s ease;
+}
+
+.heart-beat:hover {
+    animation: pulse-gentle 0.6s ease;
+    color: #933e67;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.notification-slide {
+    animation: slideInRight 0.5s ease-out;
+}
+
+@keyframes pricePulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.price-animation {
+    animation: pricePulse 0.6s ease-out;
+}
+
+@keyframes buttonPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.btn-add-to-cart {
+    transition: all 0.3s ease;
+}
+
+.btn-add-to-cart:hover {
+    animation: buttonPop 0.4s ease;
+}
+
+.heart-beat {
+    transition: all 0.3s ease;
+}
+
+.heart-beat:hover {
+    animation: pulse-gentle 0.6s ease;
+    color: #933e67;
+}
+
+.notification-slide {
+    animation: slideInRight 0.5s ease-out;
 }
