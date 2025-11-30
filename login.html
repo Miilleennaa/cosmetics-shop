@@ -47,30 +47,34 @@
         </div>
     </nav>
 
-    <div class="container my-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="auth-form">
-                    <h2 class="text-center mb-4">Авторизация</h2>
-                    <form id="loginForm">
-                        <div class="mb-3">
-                            <label for="phone" class="form-label">Номер телефона</label>
-                            <input type="tel" class="form-control" id="phone" placeholder="+7 (915) 799-08-95" required>
+    <!-- Основной контент с минимальной высотой -->
+    <div class="main-content">
+        <div class="container my-5 py-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="auth-form">
+                        <h2 class="text-center mb-4">Авторизация</h2>
+                        <form id="loginForm">
+                            <div class="mb-3">
+                                <label for="phone" class="form-label">Номер телефона</label>
+                                <input type="tel" class="form-control" id="phone" placeholder="+7 (915) 799-08-95" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Имя</label>
+                                <input type="text" class="form-control" id="name" placeholder="Ваше имя" required>
+                            </div>
+                            <button type="submit" class="btn btn-pink w-100">Войти</button>
+                        </form>
+                        <div class="text-center mt-3">
+                            <p>Нет аккаунта? <a href="#" class="text-pink">Зарегистрироваться</a></p>
                         </div>
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Имя</label>
-                            <input type="text" class="form-control" id="name" placeholder="Ваше имя" required>
-                        </div>
-                        <button type="submit" class="btn btn-pink w-100">Войти</button>
-                    </form>
-                    <div class="text-center mt-3">
-                        <p>Нет аккаунта? <a href="#" class="text-pink">Зарегистрироваться</a></p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Футер -->
     <footer class="footer">
         <div class="container">
             <div class="row">

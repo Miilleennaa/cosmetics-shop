@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     loadCartItems();
     updateOrderSummary();
     setupCartEventListeners();
+    addClearCartButton();
 });
 
 function loadCartItems() {
@@ -26,20 +27,22 @@ function loadCartItems() {
     
     cartContainer.innerHTML = cart.map(item => {
         const itemTotal = item.price * item.quantity;
+        const category = item.category || 'Косметика';
+        const image = item.image || 'placeholder.jpg';
         
         return `
             <div class="cart-item mb-4 pb-4 border-bottom" data-id="${item.id}">
                 <div class="row align-items-center">
-                    <div class="col-md-2">
-                        <img src="${item.image}" class="img-fluid rounded product-img" alt="${item.name}" style="height: 80px; object-fit: cover;">
+                    <div class="col-md-2 col-3">
+                        <img src="${image}" class="img-fluid rounded product-img" alt="${item.name}" style="height: 80px; object-fit: cover; width: 100%;">
                     </div>
-                    <div class="col-md-4">
-                        <h6 class="mb-1">${item.name}</h6>
-                        <p class="text-muted small mb-1">${item.category}</p>
+                    <div class="col-md-4 col-9">
+                        <h6 class="mb-1 fw-bold">${item.name}</h6>
+                        <p class="text-muted small mb-1">${category}</p>
                         <p class="text-pink mb-0 fw-bold">${item.price.toLocaleString()} руб.</p>
                     </div>
-                    <div class="col-md-3">
-                        <div class="input-group input-group-sm" style="max-width: 140px;">
+                    <div class="col-md-3 col-12 mt-2 mt-md-0">
+                        <div class="input-group input-group-sm mx-auto" style="max-width: 140px;">
                             <button class="btn btn-outline-secondary" type="button" onclick="updateQuantity(${item.id}, -1)">
                                 <i class="fas fa-minus"></i>
                             </button>
@@ -51,10 +54,10 @@ function loadCartItems() {
                             </button>
                         </div>
                     </div>
-                    <div class="col-md-2">
-                        <span class="h6 mb-0">${itemTotal.toLocaleString()} руб.</span>
+                    <div class="col-md-2 col-6 mt-2 mt-md-0">
+                        <span class="h6 mb-0 text-center d-block fw-bold">${itemTotal.toLocaleString()} руб.</span>
                     </div>
-                    <div class="col-md-1">
+                    <div class="col-md-1 col-6 mt-2 mt-md-0 text-center">
                         <button class="btn btn-outline-danger btn-sm" onclick="removeFromCart(${item.id})" title="Удалить">
                             <i class="fas fa-trash"></i>
                         </button>
@@ -73,7 +76,7 @@ function updateQuantity(productId, change, newValue = null) {
     
     if (item) {
         if (newValue !== null) {
-            item.quantity = parseInt(newValue);
+            item.quantity = parseInt(newValue) || 1;
         } else {
             item.quantity += change;
         }
@@ -124,6 +127,11 @@ function updateOrderSummary() {
 }
 
 function calculateDiscount(subtotal) {
+    const appliedPromo = JSON.parse(localStorage.getItem('appliedPromoCode'));
+    if (appliedPromo) {
+        return appliedPromo.discount;
+    }
+    
     if (subtotal >= 5000) {
         return Math.round(subtotal * 0.1);
     }
@@ -136,7 +144,7 @@ function applyPromoCode() {
     const promoCode = promoCodeInput.value.trim().toUpperCase();
     
     if (!promoCode) {
-        promoMessage.innerHTML = '<span class="text-danger">Введите промокод</span>';
+        promoMessage.innerHTML = '<span class="text-danger small">Введите промокод</span>';
         return;
     }
     
@@ -154,13 +162,16 @@ function applyPromoCode() {
         
         localStorage.setItem('appliedPromoCode', JSON.stringify({
             code: promoCode,
-            discount: discount
+            discount: discount,
+            rate: discountRate
         }));
         
-        promoMessage.innerHTML = `<span class="text-success">Промокод применен! Скидка ${discountRate * 100}%</span>`;
+        promoMessage.innerHTML = `<span class="text-success small">Промокод применен! Скидка ${discountRate * 100}%</span>`;
         updateOrderSummary();
+        showNotification(`Промокод "${promoCode}" применен!`, 'success');
     } else {
-        promoMessage.innerHTML = '<span class="text-danger">Неверный промокод</span>';
+        promoMessage.innerHTML = '<span class="text-danger small">Неверный промокод</span>';
+        showNotification('Неверный промокод', 'error');
     }
 }
 
@@ -176,7 +187,6 @@ function proceedToCheckout() {
 }
 
 function setupCartEventListeners() {
-    // Обработчики для ввода количества
     document.addEventListener('change', function(e) {
         if (e.target.classList.contains('quantity-input')) {
             const productId = parseInt(e.target.closest('.cart-item').dataset.id);
@@ -188,6 +198,13 @@ function setupCartEventListeners() {
                 e.target.value = 1;
                 updateQuantity(productId, 0, 1);
             }
+        }
+    });
+    
+    document.addEventListener('keypress', function(e) {
+        if (e.target.id === 'promoCode' && e.key === 'Enter') {
+            e.preventDefault();
+            applyPromoCode();
         }
     });
 }
@@ -203,8 +220,11 @@ function updateCartCounter() {
 }
 
 function showNotification(message, type = 'success') {
+    const existingNotifications = document.querySelectorAll('.notification-slide');
+    existingNotifications.forEach(notification => notification.remove());
+    
     const notification = document.createElement('div');
-    notification.className = `alert alert-${type} position-fixed notification-slide`;
+    notification.className = `alert alert-${type === 'error' ? 'danger' : type} position-fixed notification-slide`;
     notification.style.cssText = `
         top: 20px;
         right: 20px;
@@ -212,9 +232,14 @@ function showNotification(message, type = 'success') {
         min-width: 300px;
         box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     `;
+    
+    const icon = type === 'success' ? 'check-circle' : 
+                 type === 'warning' ? 'exclamation-triangle' : 
+                 type === 'error' ? 'times-circle' : 'info-circle';
+    
     notification.innerHTML = `
         <div class="d-flex align-items-center">
-            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'} me-2"></i>
+            <i class="fas fa-${icon} me-2"></i>
             <span>${message}</span>
             <button type="button" class="btn-close ms-auto" onclick="this.parentElement.parentElement.remove()"></button>
         </div>
@@ -229,8 +254,13 @@ function showNotification(message, type = 'success') {
     }, 4000);
 }
 
-// Функция для очистки всей корзины
 function clearCart() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    if (cart.length === 0) {
+        showNotification('Корзина уже пуста', 'info');
+        return;
+    }
+    
     if (confirm('Вы уверены, что хотите очистить всю корзину?')) {
         localStorage.removeItem('cart');
         localStorage.removeItem('appliedPromoCode');
@@ -240,14 +270,22 @@ function clearCart() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+function addClearCartButton() {
     const cartHeader = document.querySelector('.card-header h5');
-    if (cartHeader) {
+    if (cartHeader && !document.querySelector('.clear-cart-btn')) {
         const clearButton = document.createElement('button');
-        clearButton.className = 'btn btn-outline-danger btn-sm';
+        clearButton.className = 'btn btn-outline-danger btn-sm clear-cart-btn';
         clearButton.innerHTML = '<i class="fas fa-trash me-1"></i>Очистить';
         clearButton.onclick = clearCart;
-        cartHeader.parentElement.classList.add('d-flex', 'justify-content-between', 'align-items-center');
-        cartHeader.parentElement.appendChild(clearButton);
+        
+        const headerContainer = cartHeader.parentElement;
+        headerContainer.classList.add('d-flex', 'justify-content-between', 'align-items-center');
+        headerContainer.appendChild(clearButton);
     }
-});
+}
+
+window.updateQuantity = updateQuantity;
+window.removeFromCart = removeFromCart;
+window.applyPromoCode = applyPromoCode;
+window.proceedToCheckout = proceedToCheckout;
+window.clearCart = clearCart;

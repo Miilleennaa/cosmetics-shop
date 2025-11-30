@@ -250,38 +250,54 @@ function displayProducts() {
         return;
     }
     
+    let colClass;
+    const screenWidth = window.innerWidth;
+    
+    if (screenWidth < 576) {
+        colClass = 'col-12';
+    } else if (screenWidth < 768) {
+        colClass = 'col-sm-6';
+    } else if (screenWidth < 992) {
+        colClass = 'col-md-6';
+    } else {
+        colClass = 'col-lg-4 col-md-6';
+    }
+    
     productsToShow.forEach(product => {
         const isNew = product.id <= 3; 
         const isOnSale = product.id % 4 === 0; 
         
         const productHTML = `
-            <div class="col-md-4 mb-4">
-                <div class="card h-100 product-card">
+            <div class="${colClass} mb-4">
+                <div class="card h-100 product-card" style="min-height: 420px;">
                     <div class="position-relative">
-                        <img src="${product.image}" class="product-img card-img-top" alt="${product.name}">
+                        <img src="${product.image}" class="product-img card-img-top" alt="${product.name}" style="height: 220px;">
                         ${isNew ? '<span class="badge badge-new product-badge">Новинка</span>' : ''}
                         ${isOnSale ? '<span class="badge badge-sale product-badge">Скидка 15%</span>' : ''}
                     </div>
-                    <div class="card-body d-flex flex-column">
+                    <div class="card-body d-flex flex-column p-3">
                         <h5 class="card-title">${product.name}</h5>
-                        <p class="card-text flex-grow-1 text-muted">${product.description}</p>
-                        <div class="d-flex justify-content-between align-items-center mt-auto">
-                            <div>
-                                ${isOnSale ? `
-                                    <span class="text-muted text-decoration-line-through me-2">${Math.round(product.price * 1.15).toLocaleString()} руб.</span>
-                                    <span class="h5 mb-0 text-danger price-animation">${product.price.toLocaleString()} руб.</span>
-                                ` : `
-                                    <span class="h5 mb-0 price-animation">${product.price.toLocaleString()} руб.</span>
-                                `}
-                            </div>
-                            <div class="btn-group">
-                                <button class="btn btn-outline-pink heart-beat me-2" onclick="addToFavorites(${product.id})" title="Добавить в избранное">
-                                    <i class="fas fa-heart"></i>
-                                </button>
-                                <button class="btn btn-pink btn-add-to-cart" onclick="showProductNotification(${product.id})">
-                                    <i class="fas fa-cart-plus me-1"></i>В корзину
-                                </button>
-                            </div>
+                        <p class="card-text flex-grow-1 text-muted" style="min-height: 60px;">${product.description}</p>
+                        
+                        <!-- НОВАЯ СТРУКТУРА: ЦЕНА НАД КНОПКАМИ -->
+                        <div class="product-price-section">
+                            ${isOnSale ? `
+                                <div class="d-flex align-items-center">
+                                    <span class="product-price-old">${Math.round(product.price * 1.15).toLocaleString()} руб.</span>
+                                    <span class="product-price price-animation">${product.price.toLocaleString()} руб.</span>
+                                </div>
+                            ` : `
+                                <span class="product-price price-animation">${product.price.toLocaleString()} руб.</span>
+                            `}
+                        </div>
+                        
+                        <div class="product-actions">
+                            <button class="btn btn-outline-pink heart-beat" onclick="addToFavorites(${product.id})" title="Добавить в избранное">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                            <button class="btn btn-pink btn-add-to-cart" onclick="showProductNotification(${product.id})">
+                                <i class="fas fa-cart-plus me-1"></i>В корзину
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -289,16 +305,6 @@ function displayProducts() {
         `;
         container.innerHTML += productHTML;
     });
-    
-    setTimeout(() => {
-        const newCards = container.querySelectorAll('.card');
-        newCards.forEach(card => {
-            card.style.opacity = "0";
-            card.style.transform = "translateY(30px)";
-            card.style.transition = "opacity 0.6s ease, transform 0.6s ease";
-        });
-        initScrollAnimations();
-    }, 100);
 }
 
 function updatePagination() {
@@ -427,7 +433,7 @@ function loadFavoriteProducts() {
     const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
     
     if (favorites.length === 0) {
-        favoritesContainer.style.display = 'none';
+        favoritesContainer.innerHTML = '';
         if (noFavoritesMessage) {
             noFavoritesMessage.style.display = 'block';
         }
@@ -438,33 +444,23 @@ function loadFavoriteProducts() {
         noFavoritesMessage.style.display = 'none';
     }
     
-    favoritesContainer.innerHTML = '';
-    favorites.forEach(product => {
-        const productHTML = `
-            <div class="col-md-6 mb-3">
-                <div class="card h-100">
-                    <div class="row g-0">
-                        <div class="col-md-4">
-                            <img src="${product.image}" class="img-fluid rounded-start" alt="${product.name}" style="height: 120px; object-fit: cover; width: 100%;">
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <h6 class="card-title">${product.name}</h6>
-                                <p class="card-text text-muted small">${product.price.toLocaleString()} руб.</p>
-                                <button class="btn btn-sm btn-pink" onclick="addToCart(${product.id})">
-                                    <i class="fas fa-cart-plus me-1"></i>В корзину
-                                </button>
-                                <button class="btn btn-sm btn-outline-danger ms-2" onclick="removeFromFavorites(${product.id})">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    favoritesContainer.innerHTML = favorites.map(product => `
+        <div class="favorite-item">
+            <img src="${product.image}" alt="${product.name}">
+            <div class="favorite-info">
+                <div class="favorite-name">${product.name}</div>
+                <div class="favorite-price">${product.price.toLocaleString()} руб.</div>
             </div>
-        `;
-        favoritesContainer.innerHTML += productHTML;
-    });
+            <div class="favorite-actions">
+                <button class="btn btn-pink btn-sm" onclick="addToCart(${product.id})">
+                    <i class="fas fa-cart-plus me-1"></i>В корзину
+                </button>
+                <button class="btn btn-outline-danger btn-sm" onclick="removeFromFavorites(${product.id})">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    `).join('');
 }
 
 function removeFromFavorites(productId) {
@@ -568,4 +564,21 @@ function placeOrder() {
     setTimeout(() => {
         window.location.href = 'account.html';
     }, 2000);
+}
+
+window.addEventListener('resize', function() {
+    if (document.getElementById('productsContainer')) {
+        applyFilters(); 
+    }
+});
+
+function resetFilters() {
+    const searchInput = document.getElementById('searchInput');
+    const categoryFilter = document.getElementById('categoryFilter');
+    
+    if (searchInput) searchInput.value = '';
+    if (categoryFilter) categoryFilter.value = 'all';
+    
+    currentPage = 1;
+    applyFilters();
 }
